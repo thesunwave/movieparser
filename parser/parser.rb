@@ -15,7 +15,7 @@ module Crawler
 
       def getNewFilms
         @page ||= Nokogiri::HTML(open(@new, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
-        @titlePage = @page.xpath('//title')[0].children[0]
+        titlePage = @page.xpath('//title')[0].children[0]
         dirtyFilmList = @page.css('.shortpost')
         @cleanFilmList = {}
         count  = 0
@@ -29,6 +29,23 @@ module Crawler
         return @cleanFilmList.to_json
       end
 
+      def getCurrentInfo(url)
+        page ||= Nokogiri::HTML(open(url, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
+        titlePage = page.xpath('//title')[0].children[0]
+        currentFilm = {
+          title: page.search('//table').xpath('//td')[8].children[0].text,
+          original: page.search('//table').xpath('//td')[10].children[0].text,
+          year: page.search('//table').xpath('//td')[12].children[0].text,
+          country: page.search('//table').xpath('//td')[14].children[0].text,
+          slogan: page.search('//table').xpath('//td')[16].children[0].text,
+          genre: page.search('//table').xpath('//td')[20].children[0].text,
+          time: page.search('//table').xpath('//td')[22].children[0].text,
+          description: page.search('.description')[0].children[1].children[0].text.strip,
+          poster: page.search('.mobile_cover')[0].children[1].attributes['src'].value ,
+          url: page.search('//iframe')[1]
+        }
+        return currentFilm.to_json
+      end
 
     end
 
