@@ -14,7 +14,7 @@ module Crawler
       end
 
       def getNewFilms
-        @page ||= Nokogiri::HTML(open(@new, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT))
+        @page ||= Nokogiri::HTML(open(@new, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
         @titlePage = @page.xpath('//title')[0].children[0]
         dirtyFilmList = @page.css('.shortpost')
         @cleanFilmList = {}

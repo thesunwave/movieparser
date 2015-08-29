@@ -1,2 +1,2 @@
-require "parser/parser"
-require "parser/api"
+require "./parser/parser"
+#require "./parser/api"
