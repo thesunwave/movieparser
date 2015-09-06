@@ -5,9 +5,9 @@ get '/' do
   '
   <h1>Hisdasd</h1>
   <a href="/newfilms">Newfilms</a>
-  <a class="link" href="http://baskino.com/films/boeviki/12442-azart-lyubvi.html">Этот неловкий</a>
+  <a class="link" href="/showinfo/http://baskino.com/films/boeviki/12442-azart-lyubvi.html">Этот неловкий</a>
 
-  <script>
+  <!-- <script>
     link = document.querySelectorAll("a");
     body = document.querySelector("body");
 
@@ -17,7 +17,7 @@ get '/' do
       var href = event.target.getAttribute("href");
       var http = new XMLHttpRequest();
       var url = "/showinfo";
-      http.open("POST", url, true);
+      http.open("GET", url, true);
       http.setRequestHeader("Content-Type", "application/x-www-form-urlencoded")
 
       http.onreadystatechange = function() {
@@ -27,7 +27,7 @@ get '/' do
       }
       http.send("url=" + href);
     }
-  </script>
+  </script> -->
   '
 end
 
@@ -37,8 +37,8 @@ get '/newfilms' do
   parser.getNewFilms
 end
 
-post '/showinfo' do
-  #{}"#{params[:url]}"
+get '/showinfo/:url' do
+  "#{params[:url]}"
   content_type :json
   parser = Crawler::Parser.new
   parser.getCurrentInfo(params[:url])
