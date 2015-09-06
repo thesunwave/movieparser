@@ -35,14 +35,14 @@ get '/' do
 end
 
 get '/newfilms' do
-  content_type :json
+  content_type :json, charset: 'utf-8'
   parser = Crawler::Parser.new
   parser.getNewFilms
 end
 
 get '/showinfo' do
   "#{params[:url]}"
-  content_type :json
+  content_type :json, charset: 'utf-8'
   parser = Crawler::Parser.new
   parser.getCurrentInfo(CGI.unescape(params[:url]))
 end
