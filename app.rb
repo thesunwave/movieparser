@@ -2,10 +2,12 @@ require 'sinatra'
 require_relative './parser'
 
 get '/' do
-  '
+  target_url = CGI.escape('http://baskino.com/films/boeviki/12442-azart-lyubvi.html')
+
+  template = '
   <h1>Hisdasd</h1>
   <a href="/newfilms">Newfilms</a>
-  <a class="link" href="/showinfo/http://baskino.com/films/boeviki/12442-azart-lyubvi.html">Этот неловкий</a>
+  <a class="link" href="/showinfo?url=<%= target_url %>">Этот неловкий</a>
 
   <!-- <script>
     link = document.querySelectorAll("a");
@@ -29,6 +31,7 @@ get '/' do
     }
   </script> -->
   '
+  ERB.new(template).result(binding)
 end
 
 get '/newfilms' do
@@ -37,9 +40,9 @@ get '/newfilms' do
   parser.getNewFilms
 end
 
-get '/showinfo/:url' do
+get '/showinfo' do
   "#{params[:url]}"
   content_type :json
   parser = Crawler::Parser.new
-  parser.getCurrentInfo(params[:url])
+  parser.getCurrentInfo(CGI.unescape(params[:url]))
 end
