@@ -41,7 +41,6 @@ get '/newfilms' do
 end
 
 get '/showinfo' do
-  "#{params[:url]}"
   content_type :json, charset: 'utf-8'
   parser = Crawler::Parser.new
   parser.getCurrentInfo(CGI.unescape(params[:url]))
