@@ -1,12 +1,22 @@
 require 'sinatra'
 require_relative './parser'
 
+# Categories
+
+categories = { FIGHTING: 'http://baskino.com/films/boevie-iskustva/',
+               BIO: 'http://baskino.com/films/biograficheskie/',
+               ACTION: 'http://baskino.com/films/boeviki/',
+               WESTERN: 'http://baskino.com/films/vesterny/' }
+
+
 get '/' do
   target_url = CGI.escape('http://baskino.com/films/boeviki/12442-azart-lyubvi.html')
 
   template = '
   <h1>Hisdasd</h1>
-  <a href="/newfilms">Newfilms</a>
+  <% categories.each do |k, v| %>
+  <a href="/newfilms?url=<%= CGI.escape(v) %>"><%= k.capitalize %></a>
+  <% end %>
   <a class="link" href="/showinfo?url=<%= target_url %>">Этот неловкий</a>
 
   <!-- <script>
@@ -37,7 +47,7 @@ end
 get '/newfilms' do
   content_type :json, charset: 'utf-8'
   parser = Crawler::Parser.new
-  parser.getNewFilms
+  parser.getNewFilms(CGI.unescape(params[:url]))
 end
 
 get '/showinfo' do

@@ -6,17 +6,12 @@ module Crawler
     class Parser
       attr_accessor :cleanFilmList
 
-      NEW_FILMS =  'http://baskino.com/new/'
       USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.854.0 Safari/535.2"
 
-      def initialize
-        @new = NEW_FILMS
-      end
-
-      def getNewFilms
-        @page ||= Nokogiri::HTML(open(@new, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
-        titlePage = @page.xpath('//title')[0].children[0]
-        dirtyFilmList = @page.css('.shortpost')
+      def getNewFilms(url)
+        page ||= Nokogiri::HTML(open(url, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
+        titlePage = page.xpath('//title')[0].children[0]
+        dirtyFilmList = page.css('.shortpost')
         @cleanFilmList = {}
         count  = 0
         dirtyFilmList.each do |e|
@@ -38,7 +33,7 @@ module Crawler
           year: page.search('//table').xpath('//td')[12].children[0].text,
           country: page.search('//table').xpath('//td')[14].children[0].text,
           slogan: page.search('//table').xpath('//td')[16].children[0].text,
-          genre: page.search('//table').xpath('//td')[20].children[0].text,
+          genre: page.search('//table').xpath('//td')[20].children.map { |x| x.text },
           time: page.search('//table').xpath('//td')[22].children[0].text,
           description: page.search('.description')[0].children[1].children[0].text.strip,
           poster: page.search('.mobile_cover')[0].children[1].attributes['src'].value ,
