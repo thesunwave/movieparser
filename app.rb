@@ -34,7 +34,10 @@ get '/' do
   <% categories.each do |k, v| %>
   <a href="/newfilms?url=<%= CGI.escape(v) %>"><%= k.capitalize %></a>
   <% end %>
-  <a class="link" href="/showinfo?url=<%= target_url %>">Этот неловкий</a>
+  <form action="/showinfo">
+  <input type="text" name="url"></input>
+  <input type="submit">
+  </form>
 
   <!-- <script>
     link = document.querySelectorAll("a");
