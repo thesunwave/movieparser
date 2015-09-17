@@ -73,6 +73,7 @@ end
 
 get '/newfilms' do
   content_type :json, charset: 'utf-8'
+  headers 'Access-Control-Allow-Origin' => '*'
   parser = Crawler::Parser.new
   begin
       parser.getNewFilms(CGI.unescape(params[:url]))
@@ -84,6 +85,7 @@ end
 
 get '/showinfo' do
   content_type :json, charset: 'utf-8'
+  headers 'Access-Control-Allow-Origin' => '*'
   parser = Crawler::Parser.new
   begin
       parser.getCurrentInfo(CGI.unescape(params[:url]))
@@ -95,6 +97,7 @@ end
 
 get '/search' do
     content_type :json, charset: 'utf-8'
+    headers 'Access-Control-Allow-Origin' => '*'
     parser = Crawler::Parser.new
     begin
         if params[:name].empty?
