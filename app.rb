@@ -71,6 +71,12 @@ get '/' do
   ERB.new(template).result(binding)
 end
 
+get '/categories' do
+    content_type :json, charset: 'utf-8'
+    headers 'Access-Control-Allow-Origin' => '*'
+    categories.to_json
+end
+
 get '/newfilms' do
   content_type :json, charset: 'utf-8'
   headers 'Access-Control-Allow-Origin' => '*'
