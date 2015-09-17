@@ -98,6 +98,7 @@ get '/search' do
     parser = Crawler::Parser.new
     begin
         if params[:name].empty?
+            status 400
             body 'Don\'t be an empty'
         else
             parser.search(params[:name])
