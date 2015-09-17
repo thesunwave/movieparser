@@ -1,0 +1,74 @@
+FORMAT: 1A
+HOST: http://polls.apiblueprint.org/
+
+# MovieParser
+
+This api provide the some functions for movie database, for getting content.
+
+## Questions Collection [/questions]
+
+### List films [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "0": {
+                    "href": "http://baskino.com/films/multfilmy/11367-minony.html",
+                    "title": "Миньоны",
+                    "poster": "http://st.baskino.com/uploads/images/2015/988/nbxi902.jpg"
+                },
+                "1": {
+                    "href": "http://baskino.com/films/komedii/11682-ovechka-dolli-byla-zlaya-i-rano-umerla.html",
+                    "title": "Овечка Долли была злая и рано умерла",
+                    "poster": "http://st.baskino.com/uploads/images/2015/386/kwjm455.jpg"
+                }
+            }
+
+        ]
+
+### Create a New Question [POST]
+
+You may create your own question using this action. It takes a JSON
+object containing a question and a collection of answers in the
+form of choices.
+
++ Request (application/json)
+
+        {
+            "question": "Favourite programming language?",
+            "choices": [
+                "Swift",
+                "Python",
+                "Objective-C",
+                "Ruby"
+            ]
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /questions/2
+
+    + Body
+
+            {
+                "question": "Favourite programming language?",
+                "published_at": "2015-08-05T08:40:51.620Z",
+                "choices": [
+                    {
+                        "choice": "Swift",
+                        "votes": 0
+                    }, {
+                        "choice": "Python",
+                        "votes": 0
+                    }, {
+                        "choice": "Objective-C",
+                        "votes": 0
+                    }, {
+                        "choice": "Ruby",
+                        "votes": 0
+                    }
+                ]
+            }
