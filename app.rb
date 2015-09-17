@@ -3,7 +3,8 @@ require_relative './parser'
 
 # Categories
 
-categories = { FIGHTING: 'http://baskino.com/films/boevie-iskustva/',
+categories = {  NEW: 'http://baskino.com/new/',
+                FIGHTING: 'http://baskino.com/films/boevie-iskustva/',
                 BIO: 'http://baskino.com/films/biograficheskie/',
                 ACTION: 'http://baskino.com/films/boeviki/',
                 WESTERN: 'http://baskino.com/films/vesterny/',
@@ -30,12 +31,18 @@ get '/' do
   target_url = CGI.escape('http://baskino.com/films/boeviki/12442-azart-lyubvi.html')
 
   template = '
-  <h1>Hisdasd</h1>
+  <h1>Films</h1>
   <% categories.each do |k, v| %>
   <a href="/newfilms?url=<%= CGI.escape(v) %>"><%= k.capitalize %></a>
   <% end %>
   <form action="/showinfo">
   <input type="text" name="url"></input>
+  <input type="submit">
+  </form>
+
+  <h5>Search</h5>
+  <form action="/search" method="GET">
+  <input type="text" name="name"></input>
   <input type="submit">
   </form>
 
@@ -67,11 +74,36 @@ end
 get '/newfilms' do
   content_type :json, charset: 'utf-8'
   parser = Crawler::Parser.new
-  parser.getNewFilms(CGI.unescape(params[:url]))
+  begin
+      parser.getNewFilms(CGI.unescape(params[:url]))
+  rescue Exception => e
+      status 503
+      body 'Service is not available: ' + e.message
+  end
 end
 
 get '/showinfo' do
   content_type :json, charset: 'utf-8'
   parser = Crawler::Parser.new
-  parser.getCurrentInfo(CGI.unescape(params[:url]))
+  begin
+      parser.getCurrentInfo(CGI.unescape(params[:url]))
+  rescue Exception => e
+      status 503
+      body 'Service is not available: ' + e.message
+  end
+end
+
+get '/search' do
+    content_type :json, charset: 'utf-8'
+    parser = Crawler::Parser.new
+    begin
+        if params[:name].empty?
+            body 'Don\'t be an empty'
+        else
+            parser.search(params[:name])
+        end
+    rescue Exception => e
+        status 503
+        body 'Service is not available: ' + e.message
+    end
 end
