@@ -27,7 +27,7 @@ module Crawler
         time: page.search('//table').xpath('//td')[22].children[0].text,
         description: page.search('.description')[0].children[1].children[0].text.strip,
         poster: page.search('.mobile_cover')[0].children[1].attributes['src'].value,
-        url: page.search('//iframe')[1]
+        url: getStream(page.search('//iframe')[1].attributes['src'].value)
       }
       currentFilm.to_json
     end
@@ -68,6 +68,20 @@ module Crawler
           count += 1
         end
         @cleanFilmList.to_json
+    end
+
+    def getStream(url)
+        videoId = url.split('/')[4]
+        m3u = RestClient.post('http://staticdn.nl/sessions/create_session',
+            :partner => '',
+            :d_id => '21609',
+            :video_token => "#{videoId}",
+            :content_type => 'movie',
+            :access_key => 'zNW4q9pL82sHxV',
+            :cd => '1'
+            )
+        data = JSON.parse(m3u)
+        return data
     end
 
   end
