@@ -101,6 +101,18 @@ get '/showinfo' do
   end
 end
 
+get '/top' do
+    content_type :json, charset: 'utf-8'
+    headers 'Access-Control-Allow-Origin' => '*'
+    parser = Crawler::Parser.new
+    begin
+        parser.getTop()
+    rescue Exception => e
+        status 503
+        body 'Service is not available: ' + e.message
+    end
+end
+
 get '/search' do
     content_type :json, charset: 'utf-8'
     headers 'Access-Control-Allow-Origin' => '*'

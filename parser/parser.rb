@@ -32,6 +32,22 @@ module Crawler
       currentFilm.to_json
     end
 
+    def getTop
+        page ||= Nokogiri::HTML(RestClient.get('http://baskino.com/top/'))
+        table = page.search('//ul').css('.content_list_top li')
+        cleanFilmList = {}
+        count = 0
+        table.each do |e|
+          cleanFilmList[count] = {  href: e.children[1].attributes['href'].value,
+                                    title: e.children[1].children[3].children[0].children.first.text,
+                                    year: e.children[1].children[3].children.last.children.last.text,
+                                    rating: e.children[1].children[5].children.last.text
+                        }
+          count += 1
+        end
+        cleanFilmList.to_json
+    end
+
     def search(name)
         page ||= Nokogiri::HTML(RestClient.post('http://baskino.com/index.php?do=search', :subaction => 'search', :story => name))
         parseList(page)
