@@ -9,12 +9,12 @@ module Crawler
     USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.854.0 Safari/535.2'
 
     def getNewFilms(url)
-      page ||= Nokogiri::HTML(open(url, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
+      page ||= Nokogiri::HTML(open(url, 'User-Agent' => USER_AGENT), 'UTF-8')
       parseList(page)
     end
 
     def getCurrentInfo(url)
-      page ||= Nokogiri::HTML(open(url, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
+      page ||= Nokogiri::HTML(open(url, 'User-Agent' => USER_AGENT), 'UTF-8')
       currentFilm = {
         title: page.search('//table').xpath('//td')[8].children[0].text,
         original: page.search('//table').xpath('//td')[10].children[0].text,
