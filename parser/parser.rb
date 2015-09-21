@@ -5,7 +5,6 @@ require 'rest-client'
 
 module Crawler
   class Parser
-    attr_accessor :cleanFilmList
 
     USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.854.0 Safari/535.2'
 
@@ -16,7 +15,6 @@ module Crawler
 
     def getCurrentInfo(url)
       page ||= Nokogiri::HTML(open(url, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
-      titlePage = page.xpath('//title')[0].children[0]
       currentFilm = {
         title: page.search('//table').xpath('//td')[8].children[0].text,
         original: page.search('//table').xpath('//td')[10].children[0].text,
@@ -49,40 +47,38 @@ module Crawler
     end
 
     def search(name)
-        page ||= Nokogiri::HTML(RestClient.post('http://baskino.com/index.php?do=search', :subaction => 'search', :story => name))
+        page ||= Nokogiri::HTML(RestClient.post('http://baskino.com/index.php?do=search', subaction: 'search', story: name))
         parseList(page)
     end
 
     private
 
     def parseList(page)
-        titlePage = page.xpath('//title')[0].children[0]
         dirtyFilmList = page.css('.shortpost')
-        @cleanFilmList = {}
+        cleanFilmList = {}
         count = 0
         dirtyFilmList.each do |e|
-          @cleanFilmList[count] = { href: e.children[1].children[1].attributes['href'].value,
+          cleanFilmList[count] = { href: e.children[1].children[1].attributes['href'].value,
                                     title: e.children[1].children[1].children[1].attributes['title'].value,
                                     poster: e.children[1].children[1].children[1].attributes['src'].value
                         }
           count += 1
         end
-        @cleanFilmList.to_json
+        cleanFilmList.to_json
     end
 
     def getStream(url)
         videoId = url.split('/')[4]
         m3u = RestClient.post('http://staticdn.nl/sessions/create_session',
-            :partner => '',
-            :d_id => '21609',
-            :video_token => "#{videoId}",
-            :content_type => 'movie',
-            :access_key => 'zNW4q9pL82sHxV',
-            :cd => '1'
+                              partner: '',
+                              d_id: '21609',
+                              video_token: "#{videoId}",
+                              content_type: 'movie',
+                              access_key: 'zNW4q9pL82sHxV',
+                              cd: '1'
             )
         data = JSON.parse(m3u)
         return data
     end
-
   end
 end

@@ -28,7 +28,6 @@ categories = {  NEW: 'http://baskino.com/new/',
 
 
 get '/' do
-  target_url = CGI.escape('http://baskino.com/films/boeviki/12442-azart-lyubvi.html')
 
   template = '
   <h1>Films</h1>
@@ -106,7 +105,7 @@ get '/top' do
     headers 'Access-Control-Allow-Origin' => '*'
     parser = Crawler::Parser.new
     begin
-        parser.getTop()
+        parser.getTop
     rescue Exception => e
         status 503
         body 'Service is not available: ' + e.message
