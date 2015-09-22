@@ -6,15 +6,15 @@ require 'rest-client'
 module Crawler
   class Parser
 
-    USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_0) AppleWebKit/535.2 (KHTML, like Gecko) Chrome/15.0.854.0 Safari/535.2'
+    USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.124 YaBrowser/15.7.2357.2875 Safari/537.36'
 
     def getNewFilms(url)
-      page ||= Nokogiri::HTML(open(url, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
+      page ||= Nokogiri::HTML(open(url, 'User-Agent' => USER_AGENT), 'UTF-8')
       parseList(page)
     end
 
     def getCurrentInfo(url)
-      page ||= Nokogiri::HTML(open(url, 'proxy' => '59.172.208.186:8080', 'User-Agent' => USER_AGENT), 'UTF-8')
+      page ||= Nokogiri::HTML(open(url, 'User-Agent' => USER_AGENT), 'UTF-8')
       currentFilm = {
         title: page.search('//table').xpath('//td')[8].children[0].text,
         original: page.search('//table').xpath('//td')[10].children[0].text,
@@ -75,7 +75,8 @@ module Crawler
                               video_token: "#{videoId}",
                               content_type: 'movie',
                               access_key: 'zNW4q9pL82sHxV',
-                              cd: '1'
+                              cd: '1',
+                              user_agent: USER_AGENT
             )
         data = JSON.parse(m3u)
         return data
