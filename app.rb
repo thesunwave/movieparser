@@ -112,6 +112,23 @@ get '/top' do
     end
 end
 
+get '/kinopoisk' do
+    content_type :json, charset: 'utf-8'
+    headers 'Access-Control-Allow-Origin' => '*'
+    parser = Crawler::Moonwalk.new
+    begin
+        if params[:id].empty?
+            status 404
+            body 'Don\'t be an empty'
+        else
+            parser.getFilm(params[:id])
+        end
+    rescue Exception => e
+        status 404
+        body 'Do not have a film'
+    end
+end
+
 get '/search' do
     content_type :json, charset: 'utf-8'
     headers 'Access-Control-Allow-Origin' => '*'
